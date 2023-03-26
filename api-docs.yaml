@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: Sua API
+  description: Descrição da sua API
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+paths:
+  /usuarios:
+    get:
+      summary: Retorna uma lista de usuários
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Cria um novo usuário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                telefone:
+                  type: string
+                email:
+                  type: string
+              required:
+                - nome
+                - telefone
+                - email
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Atualiza um usuário existente
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário a ser atualizado
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+                telefone:
+                  type: string
+                email:
+                  type: string
+              required:
+                - nome
+                - telefone
+                - email
+      responses:
+        '200':
+          description: OK
+    delete:
+      summary: Exclui um usuário existente
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: ID do usuário a ser excluído
+      responses:
+        '200':
+          description: OK

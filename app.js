@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./api-docs.yaml');
 
 const swaggerOptions = {
     definition: {
@@ -13,8 +15,8 @@ const swaggerOptions = {
         version: '1.0.0',
         description: 'API para gerenciar usuários',
         contact: {
-          name: 'Seu nome',
-          email: 'seuemail@exemplo.com',
+          name: 'ilgner',
+          email: 'ilgner.gui@gmail.com',
         },
       },
       servers: [
@@ -58,7 +60,7 @@ app.use(express.json());
 app.use(cors({
     origin: 'http://127.0.0.1:5500'
   }));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 /**
