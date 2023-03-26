@@ -2,8 +2,45 @@ const express = require('express');
 const { Pool } = require('pg');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
 
+const swaggerOptions = {
+    definition: {
+      openapi: '3.0.0',
+      info: {
+        title: 'API de usuários',
+        version: '1.0.0',
+        description: 'API para gerenciar usuários',
+        contact: {
+          name: 'Seu nome',
+          email: 'seuemail@exemplo.com',
+        },
+      },
+      servers: [
+        {
+          url: `http://localhost:${process.env.PORT}`,
+        },
+      ],
 
+    },
+    components: {
+        schemas: {
+          Usuario: {
+            type: 'object',
+            properties: {
+              id: { type: 'integer' },
+              nome: { type: 'string' },
+              telefone: { type: 'string' },
+              email: { type: 'string' },
+            },
+          },
+        },
+      },
+
+    apis: ['app.js'],
+  };
+  const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 
 dotenv.config();
@@ -21,7 +58,26 @@ app.use(express.json());
 app.use(cors({
     origin: 'http://127.0.0.1:5500'
   }));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+
+/**
+ * @swagger
+ * /usuarios:
+ *   get:
+ *     summary: Retorna uma lista de todos os usuários
+ *     tags:
+ *       - Usuários
+ *     responses:
+ *       200:
+ *         description: OK
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Usuario'
+ */
 app.get('/usuarios', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM usuarios');
