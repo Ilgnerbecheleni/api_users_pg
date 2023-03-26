@@ -33,22 +33,29 @@ app.get('/usuarios', async (req, res) => {
 });
 
 app.post('/usuarios', async (req, res) => {
-  const { nome, telefone, email } = req.body;
-  if (!nome || !telefone || !email) {
-    res.status(400).json({ error: 'Dados incompletos' });
-    return;
-  }
-  try {
-    const result = await pool.query(
-      'INSERT INTO usuarios (nome, telefone, email) VALUES ($1, $2, $3) RETURNING id',
-      [nome, telefone, email]
-    );
-    res.json({ id: result.rows[0].id });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Erro ao cadastrar usuário' });
-  }
-});
+    const { nome, telefone, email } = req.body;
+    if (!nome || !telefone || !email) {
+      res.status(400).json({ error: 'Dados incompletos' });
+      return;
+    }
+    try {
+      // Verifica se já existe algum registro com o mesmo email
+      const result = await pool.query('SELECT * FROM usuarios WHERE email = $1', [email]);
+      if (result.rowCount > 0) {
+        res.status(409).json({ error: 'Email já cadastrado' });
+        return;
+      }
+      // Insere o registro na tabela usuarios
+      const resultInsert = await pool.query(
+        'INSERT INTO usuarios (nome, telefone, email) VALUES ($1, $2, $3) RETURNING id',
+        [nome, telefone, email]
+      );
+      res.json({ id: resultInsert.rows[0].id });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao cadastrar usuário' });
+    }
+  });
 
 app.put('/usuarios/:id', async (req, res) => {
   const { id } = req.params;
