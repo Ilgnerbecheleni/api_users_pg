@@ -34,6 +34,19 @@ paths:
       responses:
         '200':
           description: OK
+    /usuarios/{id}:
+  get:
+    summary: Retorna um usuário pelo ID
+    parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID do usuário a ser retornado
+        schema:
+          type: integer
+    responses:
+      '200':
+        description: OK
     put:
       summary: Atualiza um usuário existente
       parameters:
