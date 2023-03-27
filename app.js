@@ -21,7 +21,7 @@ const swaggerOptions = {
       },
       servers: [
         {
-          url: `http://localhost:${process.env.PORT}`,
+          url: `https://apiuserspg-production.up.railway.app:${process.env.PORT}`,
         },
       ],
 
@@ -57,7 +57,9 @@ const pool = new Pool({
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors( {
+    origin: 'http://localhost:5500', // especifica a origem permitida
+ }));
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
