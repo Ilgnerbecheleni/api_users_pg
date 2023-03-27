@@ -58,7 +58,7 @@ const pool = new Pool({
 const app = express();
 app.use(express.json());
 app.use(cors({
-    origin: ['http://127.0.0.1:5500','http://localhost:3000']
+    origin: ['http://127.0.0.1:5500','https://localhost:3000']
   }));
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
