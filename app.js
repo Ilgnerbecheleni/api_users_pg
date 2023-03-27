@@ -58,7 +58,7 @@ const pool = new Pool({
 const app = express();
 app.use(express.json());
 app.use(cors( {
-    origin: 'http://localhost:5500', // especifica a origem permitida
+    origin: 'http://127.0.0.1:5500', // especifica a origem permitida
  }));
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -89,6 +89,20 @@ app.get('/usuarios', async (req, res) => {
     res.status(500).json({ error: 'Erro ao buscar usuários' });
   }
 });
+app.get('/usuarios/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+      const result = await pool.query('SELECT * FROM usuarios WHERE id = $1', [id]);
+      if (result.rowCount === 0) {
+        res.status(404).json({ error: 'Usuário não encontrado' });
+        return;
+      }
+      res.json(result.rows[0]);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Erro ao buscar usuário' });
+    }
+  });
 
 app.post('/usuarios', async (req, res) => {
     const { nome, telefone, email } = req.body;
